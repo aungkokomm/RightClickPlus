@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentDialog
+    x:Class="RightClick_App.SettingsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    Title="Settings"
+    CloseButtonText="Done"
+    DefaultButton="Close"
+    mc:Ignorable="d">
+
+    <StackPanel Spacing="4" MinWidth="440">
+        <controls:SettingsCard Header="App theme" Description="Choose how RightClick+ looks."
+                               HeaderIcon="{ui:FontIcon Glyph=&#xE790;}">
+            <ComboBox MinWidth="160" SelectedIndex="{x:Bind ViewModel.ThemeIndex, Mode=TwoWay}">
+                <ComboBoxItem Content="Use system setting" />
+                <ComboBoxItem Content="Light" />
+                <ComboBoxItem Content="Dark" />
+            </ComboBox>
+        </controls:SettingsCard>
+        <controls:SettingsCard Header="Note format" Description="Format used by the File note action."
+                               HeaderIcon="{ui:FontIcon Glyph=&#xE70F;}">
+            <ComboBox MinWidth="160" SelectedIndex="{x:Bind ViewModel.NoteFormatIndex, Mode=TwoWay}">
+                <ComboBoxItem Content="Plain text (.txt)" />
+                <ComboBoxItem Content="Markdown (.md)" />
+            </ComboBox>
+        </controls:SettingsCard>
+        <controls:SettingsCard Header="Open notes with" Description="The editor that opens a file note."
+                               HeaderIcon="{ui:FontIcon Glyph=&#xE8A5;}">
+            <ComboBox MinWidth="160" SelectedIndex="{x:Bind ViewModel.NoteEditorIndex, Mode=TwoWay}">
+                <ComboBoxItem Content="Built-in editor" />
+                <ComboBoxItem Content="Notepad" />
+            </ComboBox>
+        </controls:SettingsCard>
+        <controls:SettingsCard Header="Copy separator" Description="How multiple names or paths are joined."
+                               HeaderIcon="{ui:FontIcon Glyph=&#xE8C8;}">
+            <ComboBox MinWidth="160" SelectedIndex="{x:Bind ViewModel.CopySeparatorIndex, Mode=TwoWay}">
+                <ComboBoxItem Content="One per line" />
+                <ComboBoxItem Content="Comma separated" />
+            </ComboBox>
+        </controls:SettingsCard>
+    </StackPanel>
+</ContentDialog>

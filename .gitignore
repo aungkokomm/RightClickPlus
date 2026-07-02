@@ -1,0 +1,21 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+dist/
+
+# Visual Studio / Rider
+.vs/
+*.user
+
+# Logs
+*.log
+
+# This repo folder's own Folder-color customization (applied by the app / FolderIco)
+desktop.ini
+folderico-*.ico
+RightClickPlus_*.ico
+
+# Legacy dev artifacts kept locally, not part of the shipping app (ROOT only —
+# leading slash so this never matches src/RightClick.App/Assets/ on case-insensitive Windows)
+/assets/
+/BUILD-SPEC.md

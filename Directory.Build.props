@@ -1,0 +1,13 @@
+<Project>
+  <!--
+    Single source of truth for the product version. Bumped on every build
+    (build.ps1 -BumpPatch) and stamped into the Inno Setup installer.
+  -->
+  <PropertyGroup>
+    <Version>1.0.1</Version>
+    <Authors>Aung Ko Ko</Authors>
+    <Company>Aung Ko Ko</Company>
+    <Product>RightClick+</Product>
+    <Copyright>© Aung Ko Ko</Copyright>
+  </PropertyGroup>
+</Project>

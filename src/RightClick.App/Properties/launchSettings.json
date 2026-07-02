@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "RightClick.App (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "RightClick.App (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
