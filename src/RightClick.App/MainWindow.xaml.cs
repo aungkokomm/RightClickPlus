@@ -1,19 +1,17 @@
-using System.Runtime.InteropServices;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using RightClick.Core.Models;
 using RightClick.Core.Services;
 using RightClick_App.ViewModels;
-using Windows.Graphics;
 
 namespace RightClick_App;
 
 public sealed partial class MainWindow : Window
 {
-    [DllImport("user32.dll")]
-    private static extern uint GetDpiForWindow(IntPtr hWnd);
+    // Fixed content width for this compact utility. The window hugs its content at this width;
+    // the height is fitted to the content at runtime.
+    private const int ContentWidth = 660;
 
     public MenuModeViewModel Menu { get; }
     public ActionsViewModel Actions { get; }
@@ -27,16 +25,25 @@ public sealed partial class MainWindow : Window
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
         AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
-        AppWindow.SetIcon("Assets/AppIcon.ico");
-        ResizeToContent();
-        ApplyTheme();
-    }
+        AppWindow.SetIcon(WindowHelpers.AssetPath("AppIcon.ico"));
 
-    private void ResizeToContent()
-    {
-        var hwnd = Win32Interop.GetWindowFromWindowId(AppWindow.Id);
-        var scale = GetDpiForWindow(hwnd) / 96.0;
-        AppWindow.Resize(new SizeInt32((int)(640 * scale), (int)(800 * scale)));
+        // This is a compact utility, not a document window — a handful of toggles that always fit on
+        // screen. Make it a fixed-size window (no maximize, no resize) so the content can never be
+        // stranded in a huge empty frame or hidden behind a scrollbar. The window just hugs its
+        // content at a comfortable fixed width.
+        if (AppWindow.Presenter is OverlappedPresenter presenter)
+        {
+            presenter.IsMaximizable = false;
+            presenter.IsResizable = false;
+        }
+
+        AppWindow.ResizeScaled(ContentWidth, 640); // initial; height refined to the content just below
+
+        // Width is fixed, so the content's height is stable and fitting it can't cause a resize loop.
+        // Re-fits when the InfoBar opens/closes. TitleBar row is 48; +2 avoids a hairline scrollbar.
+        ContentPanel.SizeChanged += (_, e) => AppWindow.FitToContent(ContentWidth, 48 + e.NewSize.Height + 2);
+
+        ApplyTheme();
     }
 
     private void ApplyTheme()

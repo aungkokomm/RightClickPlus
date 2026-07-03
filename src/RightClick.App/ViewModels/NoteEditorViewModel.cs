@@ -34,7 +34,7 @@ public partial class NoteEditorViewModel : ObservableObject
     [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial bool IsDirty { get; set; }
 
-    public string DisplayTitle => $"{(IsDirty ? "• " : string.Empty)}{FileName} — Note";
+    public string DisplayTitle => $"{(IsDirty ? "• " : string.Empty)}{FileName} - Note";
 
     public string WordCount
     {
@@ -82,7 +82,25 @@ public partial class NoteEditorViewModel : ObservableObject
     {
         try
         {
-            await File.WriteAllTextAsync(_filePath, Content);
+            await File.WriteAllTextAsync(_filePath, Content).ConfigureAwait(true);
+            IsDirty = false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to save note {Path}.", _filePath);
+        }
+    }
+
+    /// <summary>
+    /// Synchronous save used on the window-close path. Blocking on the async SaveAsync from the UI
+    /// thread there can deadlock (its continuation needs the very thread that's waiting), which would
+    /// silently lose the note. On failure IsDirty stays set, so the unsaved marker remains visible.
+    /// </summary>
+    public void Save()
+    {
+        try
+        {
+            File.WriteAllText(_filePath, Content);
             IsDirty = false;
         }
         catch (Exception ex)

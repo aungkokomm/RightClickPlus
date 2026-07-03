@@ -97,6 +97,9 @@ internal static class Commands
                 return;
             }
 
+            // Self-heal: remove any ".rcpmove" staging file a previously-killed move left behind.
+            SweepStaleStaging(dir);
+
             var fileName = Path.GetFileName(path);
             var folderName = Path.GetFileNameWithoutExtension(path);
             if (string.IsNullOrWhiteSpace(folderName))
@@ -135,6 +138,30 @@ internal static class Commands
                 $"Couldn't move \"{Path.GetFileName(path)}\" into a folder.\r\n\r\n{ex.Message}",
                 AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
+    }
+
+    /// <summary>
+    /// Deletes stale "*.rcpmove" staging files (from a move that was killed mid-flight) in the folder.
+    /// Only files older than a minute are removed, so a concurrent in-flight staging file is never touched.
+    /// </summary>
+    private static void SweepStaleStaging(string dir)
+    {
+        try
+        {
+            foreach (var stale in Directory.EnumerateFiles(dir, "*.rcpmove"))
+            {
+                try
+                {
+                    if (DateTime.UtcNow - File.GetLastWriteTimeUtc(stale) > TimeSpan.FromSeconds(60))
+                    {
+                        File.SetAttributes(stale, FileAttributes.Normal);
+                        File.Delete(stale);
+                    }
+                }
+                catch { /* best effort */ }
+            }
+        }
+        catch { /* best effort */ }
     }
 
     // ---- File Note (single file only) ----
@@ -254,7 +281,12 @@ internal static class Commands
             var settings = LoadSettings();
             var formatted = files.Select(f => Format(variant, f));
             var sep = settings.CopySeparator == CopySeparator.Comma ? ", " : "\r\n";
-            Clip.SetText(string.Join(sep, formatted));
+            if (!Clip.SetText(string.Join(sep, formatted)))
+            {
+                MessageBox.Show(
+                    "Couldn't copy to the clipboard. It may be locked by another program; please try again.",
+                    AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
         catch (Exception ex)
         {

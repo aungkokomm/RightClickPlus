@@ -22,7 +22,7 @@ internal static class SelectionAggregator
         var mutex = new Mutex(initiallyOwned: false, $"Global\\RightClickPlus.{Sanitize(sessionName)}");
 
         bool isLeader;
-        mutex.WaitOne();
+        AcquireMutex(mutex);
         try
         {
             var fresh = !File.Exists(sessionFile) ||
@@ -55,7 +55,7 @@ internal static class SelectionAggregator
         {
             // Give the rest of the batch time to register, then take the whole set.
             Thread.Sleep(Window);
-            mutex.WaitOne();
+            AcquireMutex(mutex);
             try
             {
                 var lines = File.Exists(sessionFile)
@@ -71,6 +71,16 @@ internal static class SelectionAggregator
             }
         };
         return true;
+    }
+
+    /// <summary>
+    /// Waits on the mutex, treating <see cref="AbandonedMutexException"/> as success: it means a prior
+    /// helper process was killed while holding the mutex, but the wait still acquired it for us.
+    /// </summary>
+    private static void AcquireMutex(Mutex mutex)
+    {
+        try { mutex.WaitOne(); }
+        catch (AbandonedMutexException) { /* previous owner died; we now hold the mutex */ }
     }
 
     private static string Sanitize(string s) =>

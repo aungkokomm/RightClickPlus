@@ -30,22 +30,24 @@
         </TitleBar>
 
         <ScrollViewer Grid.Row="1">
-            <StackPanel Padding="28,12,28,28" Spacing="6" MaxWidth="660" HorizontalAlignment="Stretch">
+            <StackPanel x:Name="ContentPanel" Padding="24,16,24,20" Spacing="4" HorizontalAlignment="Stretch">
 
                 <!-- Hero header -->
-                <Grid Margin="0,0,0,8">
-                    <StackPanel Spacing="2">
-                        <TextBlock Style="{StaticResource TitleLargeTextBlockStyle}" Text="RightClick+" />
+                <Grid Margin="0,0,0,4">
+                    <StackPanel Spacing="4">
+                        <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="RightClick+" />
                         <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                    Text="Tame your right-click menu and add genuinely useful actions." />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Spacing="4">
-                        <Button AutomationProperties.Name="Settings" ToolTipService.ToolTip="Settings"
+                        <Button AutomationProperties.Name="Settings" AutomationProperties.AutomationId="SettingsButton"
+                                ToolTipService.ToolTip="Settings"
                                 Background="{ThemeResource SubtleFillColorTransparentBrush}" BorderThickness="0"
                                 Click="Settings_Click">
                             <FontIcon FontSize="16" Glyph="&#xE713;" />
                         </Button>
-                        <Button AutomationProperties.Name="About" ToolTipService.ToolTip="About"
+                        <Button AutomationProperties.Name="About" AutomationProperties.AutomationId="AboutButton"
+                                ToolTipService.ToolTip="About"
                                 Background="{ThemeResource SubtleFillColorTransparentBrush}" BorderThickness="0"
                                 Click="About_Click">
                             <FontIcon FontSize="16" Glyph="&#xE946;" />
@@ -80,9 +82,9 @@
                 </controls:SettingsCard>
 
                 <!-- Actions -->
-                <TextBlock Margin="2,14,0,4" Style="{StaticResource BodyStrongTextBlockStyle}" Text="Right-click actions" />
+                <TextBlock Margin="0,16,0,4" Style="{StaticResource BodyStrongTextBlockStyle}" Text="Right-click actions" />
 
-                <controls:SettingsCard Header="Move to folder"
+                <controls:SettingsCard Header="File to Folder"
                                        Description="Moves each selected file into its own new folder named after the file.">
                     <controls:SettingsCard.HeaderIcon>
                         <ImageIcon Source="ms-appx:///Assets/file-to-folder.ico" />
@@ -90,7 +92,7 @@
                     <ToggleSwitch IsOn="{x:Bind Actions.FileToFolderEnabled, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
-                <controls:SettingsCard Header="File note"
+                <controls:SettingsCard Header="File Note"
                                        Description="Creates a dated note next to a file and opens it. One file at a time.">
                     <controls:SettingsCard.HeaderIcon>
                         <ImageIcon Source="ms-appx:///Assets/file-notes.ico" />
@@ -98,7 +100,7 @@
                     <ToggleSwitch IsOn="{x:Bind Actions.FileNotesEnabled, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
-                <controls:SettingsCard Header="Copy file name(s)"
+                <controls:SettingsCard Header="Copy File Names"
                                        Description="Adds a Copy submenu: name, name without extension, full path, quoted path.">
                     <controls:SettingsCard.HeaderIcon>
                         <ImageIcon Source="ms-appx:///Assets/copy-file-names.ico" />
@@ -106,7 +108,7 @@
                     <ToggleSwitch IsOn="{x:Bind Actions.CopyFileNamesEnabled, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
-                <controls:SettingsCard Header="Folder color"
+                <controls:SettingsCard Header="Folder Color"
                                        Description="Right-click a folder to colour it so the ones that matter stand out.">
                     <controls:SettingsCard.HeaderIcon>
                         <ImageIcon Source="ms-appx:///Assets/folder-blue.ico" />
@@ -114,7 +116,7 @@
                     <ToggleSwitch IsOn="{x:Bind Actions.FolderColorEnabled, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
-                <TextBlock Margin="2,8,0,0" Style="{StaticResource CaptionTextBlockStyle}"
+                <TextBlock Margin="0,8,0,0" Style="{StaticResource CaptionTextBlockStyle}"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"
                            Text="On Windows 11, switch to the Classic menu above so these appear on the top-level right-click without 'Show more options'." />
             </StackPanel>

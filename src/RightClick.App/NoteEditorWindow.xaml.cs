@@ -26,8 +26,8 @@ public sealed partial class NoteEditorWindow : Window
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
         AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
-        AppWindow.SetIcon("Assets/file-notes.ico");
-        AppWindow.Resize(new Windows.Graphics.SizeInt32(720, 640));
+        AppWindow.SetIcon(WindowHelpers.AssetPath("file-notes.ico"));
+        AppWindow.ResizeScaled(720, 640);
 
         // Match the user's chosen theme.
         var theme = App.Services.GetRequiredService<ISettingsService>().Current.Theme;
@@ -90,10 +90,11 @@ public sealed partial class NoteEditorWindow : Window
 
     private void OnClosed(object sender, WindowEventArgs args)
     {
-        // Auto-save any unsaved changes so a quick note is never lost.
+        // Auto-save any unsaved changes so a quick note is never lost. Use the synchronous save here:
+        // blocking on the async one from the closing UI thread can deadlock and drop the note.
         if (ViewModel.IsDirty)
         {
-            ViewModel.SaveAsync().GetAwaiter().GetResult();
+            ViewModel.Save();
         }
     }
 }

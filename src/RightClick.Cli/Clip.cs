@@ -5,11 +5,12 @@ namespace RightClick.Cli;
 /// <summary>Reliable clipboard write from the (STA) helper process.</summary>
 internal static class Clip
 {
-    public static void SetText(string text)
+    /// <summary>Writes text to the clipboard. Returns false if it stayed locked through every retry.</summary>
+    public static bool SetText(string text)
     {
         if (string.IsNullOrEmpty(text))
         {
-            return;
+            return true;
         }
 
         // Clipboard can momentarily be locked by another process; retry a few times.
@@ -18,12 +19,17 @@ internal static class Clip
             try
             {
                 Clipboard.SetText(text);
-                return;
+                return true;
             }
-            catch when (attempt < 4)
+            catch
             {
+                if (attempt == 4)
+                {
+                    return false;
+                }
                 Thread.Sleep(80);
             }
         }
+        return false;
     }
 }

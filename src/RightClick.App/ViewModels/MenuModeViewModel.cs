@@ -65,7 +65,7 @@ public partial class MenuModeViewModel : ObservableObject
 
     public string CurrentModeText => CurrentMode switch
     {
-        MenuMode.Classic => "Classic (full) menu — forced via tweak",
+        MenuMode.Classic => "Classic (full) menu, forced via tweak",
         MenuMode.Modern => "Modern (compact) Windows 11 menu",
         MenuMode.NativeClassic => "Classic menu (native to this Windows version)",
         _ => "Unknown",

@@ -21,6 +21,17 @@
             </StackPanel>
         </StackPanel>
         <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"
-                   Text="A clean, portable utility for the Windows right-click menu — switch between the modern and classic menu and add genuinely useful actions." />
+                   Text="A clean, portable utility for the Windows right-click menu: switch between the modern and classic menu and add genuinely useful actions." />
+
+        <StackPanel Spacing="0">
+            <HyperlinkButton Padding="0" Content="Project on GitHub"
+                             NavigateUri="https://github.com/aungkokomm/RightClickPlus" />
+            <HyperlinkButton Padding="0" Content="More by the author (github.com/aungkokomm)"
+                             NavigateUri="https://github.com/aungkokomm" />
+        </StackPanel>
+
+        <TextBlock Style="{StaticResource CaptionTextBlockStyle}"
+                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"
+                   Text="RightClick+ does not update automatically. Check the project page on GitHub for new versions." />
     </StackPanel>
 </ContentDialog>

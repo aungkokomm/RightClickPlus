@@ -21,10 +21,7 @@ public sealed class ShellVerbService : IShellVerbService
     private const string FolderColorKey = "RightClickPlus.FolderColor";
 
     private static readonly string[] FolderColors =
-    {
-        "red", "orange", "green", "mint", "teal", "aqua", "blue", "sky", "purple", "lavender", "pink",
-        "indigo", "lime", "wine", "periwinkle", "raspberry", "cocoa", "charcoal", "slate",
-    };
+        { "red", "orange", "green", "mint", "teal", "aqua", "blue", "sky", "purple", "lavender", "pink" };
 
     private readonly ILogger<ShellVerbService> _logger;
 
@@ -59,10 +56,10 @@ public sealed class ShellVerbService : IShellVerbService
         switch (action)
         {
             case ShellAction.FileToFolder:
-                InstallSimpleVerb(FileToFolderKey, "Move to folder", "file-to-folder.ico", "file-to-folder");
+                InstallSimpleVerb(FileToFolderKey, "File to Folder", "file-to-folder.ico", "file-to-folder");
                 break;
             case ShellAction.FileNotes:
-                InstallSimpleVerb(FileNoteKey, "File note", "file-notes.ico", "file-note");
+                InstallSimpleVerb(FileNoteKey, "File Note", "file-notes.ico", "file-note");
                 break;
             case ShellAction.CopyFileNames:
                 InstallCopySubmenu();
@@ -103,7 +100,7 @@ public sealed class ShellVerbService : IShellVerbService
     {
         using var root = Registry.CurrentUser.CreateSubKey(FilesShellRoot, writable: true);
         using var parent = root.CreateSubKey(CopyKey, writable: true);
-        parent.SetValue("MUIVerb", "Copy file name(s)");
+        parent.SetValue("MUIVerb", "Copy File Names");
         parent.SetValue("Icon", IconPath("copy-file-names.ico"));
         parent.SetValue("SubCommands", string.Empty);
 
@@ -131,15 +128,11 @@ public sealed class ShellVerbService : IShellVerbService
     {
         using var root = Registry.CurrentUser.CreateSubKey(DirectoryShellRoot, writable: true);
         using var parent = root.CreateSubKey(FolderColorKey, writable: true);
-        parent.SetValue("MUIVerb", "Folder color");
+        parent.SetValue("MUIVerb", "Folder Color");
         parent.SetValue("Icon", IconPath("folder-blue.ico"));
         parent.SetValue("SubCommands", string.Empty);
 
         using var shell = parent.CreateSubKey("shell", writable: true);
-
-        // Reset first ("00" sorts before the colours) so it's always visible at the top — with 19
-        // colours the submenu is taller than the screen, and a Reset at the bottom falls off it.
-        AddColorChild(shell, "00reset", "Reset color", "folder-color reset", "AppIcon.ico");
 
         var index = 1;
         foreach (var color in FolderColors)
@@ -148,6 +141,7 @@ public sealed class ShellVerbService : IShellVerbService
             AddColorChild(shell, $"{index:00}{color}", label, $"folder-color {color}", $"folder-{color}.ico");
             index++;
         }
+        AddColorChild(shell, "99reset", "Reset color", "folder-color reset", "AppIcon.ico");
     }
 
     private void AddColorChild(RegistryKey shell, string keyName, string label, string cliArgs, string iconFile)
