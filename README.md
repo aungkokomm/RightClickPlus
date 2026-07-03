@@ -27,9 +27,54 @@ Windows' right‑click menu is usually two things at once: cluttered with entrie
 <!-- Screenshot: docs/screenshots/move-to-folder.png -->
 
 ### 📝 File Note
-**The problem.** You want to remember *why* you kept a file, what's left to do with it, or jot a quick reference — without renaming the file or opening a separate notes app.
 
-**The fix.** Right‑click a file → **File note**. RightClick+ creates a note right next to it (`.txt` or `.md`, your choice), pre‑stamped with the file's name and the date, and opens it in a clean built‑in editor (or Notepad, if you prefer). The note lives beside the file, so it travels with the folder.
+Files often make perfect sense today.
+
+A few days later, you find yourself asking:
+
+Where did I download this from?
+Why did I keep this?
+Which version was this?
+Was there anything special about it?
+
+For example, after downloading:
+
+setup.exe
+
+you probably remember exactly what it is.
+
+A week later...
+
+Not so much.
+
+With File Note, simply right-click the file and save whatever future-you will want to remember.
+
+Maybe it's the product description.
+
+Maybe it's the download page.
+
+Maybe it's installation instructions.
+
+Maybe it's your own reminder.
+
+Downloaded from vendor website
+
+Version 4.8.2
+
+Portable build
+
+Requires .NET 8
+
+Works with Windows 11 only
+
+Because the note lives next to the file, the information stays with it wherever you move it.
+
+To avoid interfering with your preferred note-taking application, RightClick+ includes its own lightweight built-in note editor dedicated to File Notes.
+
+It's designed for quick reminders—not replacing OneNote, Obsidian, or Notepad, but solving the simple question:
+
+"Why did I keep this file?"
+<img width="1015" height="599" alt="image" src="https://github.com/user-attachments/assets/c73929da-9905-4209-82a8-501f62051a2c" />
 
 <!-- Screenshot: docs/screenshots/file-note.png -->
 
@@ -67,7 +112,13 @@ RightClick+'s window is just a switchboard:
 The menu only ever shows the actions; all configuration lives here, so your right‑click stays clean.
 
 ---
+## Philosophy
 
+RightClick+ follows one simple principle:
+
+***If an action saves time every day, it belongs in the right-click menu.***
+
+Every feature exists because it removes unnecessary steps from common file management tasks.
 ## Install
 
 1. Download the latest `RightClickPlus-Setup-x.y.z.exe` from the [Releases](../../releases) page.
