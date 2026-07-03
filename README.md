@@ -1,6 +1,7 @@
 # RightClick+
 
 A lightweight, portable Windows utility that adds four genuinely useful actions to your right‑click menu — and lets you switch each one on or off from a simple control panel. No bloat, no background service, no admin rights.
+<img width="1774" height="887" alt="RightClickPlus" src="https://github.com/user-attachments/assets/90ad6635-a132-4e0c-8420-aeaa8b76b3de" />
 
 <!-- Screenshot: the RightClick+ control panel — save to docs/screenshots/app.png and uncomment:
 ![RightClick+ control panel](docs/screenshots/app.png)
