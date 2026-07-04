@@ -1,5 +1,12 @@
 # RightClick+
 
+<p align="center">
+  <a href="https://github.com/aungkokomm/RightClickPlus/releases/latest"><img alt="Download the latest release" src="https://img.shields.io/badge/download-latest%20release-2f6feb?style=for-the-badge"></a>
+  <a href="https://github.com/aungkokomm/RightClickPlus/releases"><img alt="Total downloads" src="https://img.shields.io/github/downloads/aungkokomm/RightClickPlus/total?style=for-the-badge&color=c026d3"></a>
+  <img alt="Windows 10/11, x64" src="https://img.shields.io/badge/windows%2010%2F11-x64-555?style=for-the-badge">
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-2ea44f?style=for-the-badge"></a>
+</p>
+
 A lightweight, portable Windows utility that adds four genuinely useful actions to your right-click menu, and lets you switch each one on or off from a simple control panel. No bloat, no background service, no admin rights.
 
 <img width="1774" height="887" alt="RightClick+ control panel" src="https://github.com/user-attachments/assets/90ad6635-a132-4e0c-8420-aeaa8b76b3de" />
