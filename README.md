@@ -124,3 +124,7 @@ The installer is built with [Inno Setup](https://jrsoftware.org/isinfo.php) from
 ## License
 
 Released under the [MIT License](LICENSE).
+
+---
+
+<p align="center"><sub>© 2026 Aung Ko Ko · <a href="https://aungkokomm.github.io/">more of my apps</a></sub></p>
