@@ -1,0 +1,122 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>RightClick+ banner</title>
+<!-- Template for docs/banner.png. Render with make-banner.ps1; {{VERSION}} comes from Directory.Build.props. -->
+<style>
+  :root { --ink:#0f172a; --body:#475569; --blue:#1a6ef5; --amber:#e8a317; --green:#16a34a; --purple:#9333ea; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:1774px; height:887px; overflow:hidden; }
+  body { position:relative; font-family:"Segoe UI Variable Text","Segoe UI",sans-serif; color:var(--ink);
+         background:linear-gradient(135deg,#f8faff 0%,#eef3fd 52%,#e4ecfb 100%); }
+  .blob { position:absolute; border-radius:50%; }
+  .b1 { width:900px; height:900px; left:-380px; top:420px; background:radial-gradient(circle,#ffffffcc 0%,#ffffff00 70%); }
+  .b2 { width:1100px; height:1100px; left:980px; top:-260px; background:radial-gradient(circle,#dbe7ff 0%,#dbe7ff00 68%); }
+  .b3 { width:66px; height:66px; left:812px; top:268px; background:radial-gradient(circle at 35% 30%,#ffffff,#d6e4ff 75%); box-shadow:0 6px 18px #9db8f033; }
+  .abs { position:absolute; }
+
+  /* header */
+  .logo { left:44px; top:62px; width:132px; height:132px; filter:drop-shadow(0 10px 18px #5b7bc433); }
+  .title { left:204px; top:52px; font-family:"Segoe UI Variable Display","Segoe UI",sans-serif; font-weight:700;
+           font-size:100px; letter-spacing:-2px; line-height:1; display:flex; align-items:center; gap:22px; }
+  .title .plus { color:var(--blue); }
+  .pill { font-family:"Segoe UI Variable Text","Segoe UI",sans-serif; font-size:24px; font-weight:600; letter-spacing:0;
+          color:#1a5fd6; background:#e3ecff; border:1px solid #c9dafc; border-radius:999px; padding:6px 16px; margin-top:14px; }
+  .tagline { left:208px; top:182px; font-size:34px; line-height:1.32; color:#1e293b; }
+  .tagline b { color:var(--blue); font-weight:700; }
+
+  /* feature rows */
+  .row { left:58px; width:440px; height:96px; display:flex; align-items:center; }
+  .row img { width:72px; height:72px; flex:none; filter:drop-shadow(0 6px 10px #33415522); }
+  .row .div { width:1px; height:70px; background:#d9e1ef; margin:0 20px 0 22px; flex:none; }
+  .row h3 { font-family:"Segoe UI Variable Display","Segoe UI",sans-serif; font-size:23px; font-weight:700; margin-bottom:4px; white-space:nowrap; }
+  .row p { font-size:17px; line-height:1.38; color:var(--body); }
+  .note img { filter:hue-rotate(180deg) saturate(1.5) brightness(1.18) drop-shadow(0 6px 10px #33415522); }
+  .copy img { filter:hue-rotate(-92deg) saturate(1.1) brightness(0.95) drop-shadow(0 6px 10px #33415522); }
+
+  /* chips + connectors */
+  .chip { left:510px; height:52px; padding:0 16px 0 18px; background:#fff; border-radius:10px; display:flex; align-items:center; gap:12px;
+          font-size:16px; font-weight:500; color:#1e293b; box-shadow:0 8px 22px #3b5b9a1f, 0 1px 2px #0f172a14; white-space:nowrap; }
+  .chip img { width:20px; height:20px; }
+  .chip .chev { margin-left:18px; width:9px; height:9px; border-top:2px solid #334155; border-right:2px solid #334155; transform:rotate(45deg); }
+  .dash { height:0; border-top:2px dashed #a8b6cc; }
+  .dot { width:7px; height:7px; border-radius:50%; background:#3d5a8a; }
+
+  /* submenus */
+  .menu { background:#fff; border-radius:9px; padding:7px 0; box-shadow:0 12px 30px #3b5b9a26, 0 1px 2px #0f172a14; z-index:3; }
+  .menu div { font-size:13.5px; color:#1e293b; padding:0 18px; height:24px; display:flex; align-items:center; gap:11px; white-space:nowrap; }
+  .menu img { width:16px; height:16px; }
+  .menu.grid { display:grid; grid-template-columns:auto auto; column-gap:4px; }
+
+  /* app window */
+  .win { left:1072px; top:60px; width:666px; border-radius:10px; overflow:hidden; z-index:2;
+         box-shadow:0 34px 70px #2a46802e, 0 10px 24px #2a46801f, 0 0 0 1px #0f172a14; }
+  .win img { display:block; width:calc(100% + 4px); margin:-2px; } /* trims the captured 1px window border */
+
+  /* badge bar */
+  .bar { left:56px; top:800px; height:64px; padding:0 34px; background:#ffffffd9; border-radius:18px; display:flex; align-items:center; z-index:1;
+         box-shadow:0 10px 28px #3b5b9a1a, 0 0 0 1px #ffffff; }
+  .bar span { display:flex; align-items:center; gap:13px; font-size:20px; font-weight:600; color:#1e293b; }
+  .bar .sep { width:1px; height:30px; background:#d6deea; margin:0 30px; }
+  .bar svg { width:26px; height:26px; }
+</style></head>
+<body>
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+
+  <img class="abs logo" src="icons/AppIcon.png" alt="">
+  <div class="abs title"><span>RightClick<span class="plus">+</span></span><span class="pill">v{{VERSION}}</span></div>
+  <div class="abs tagline">Tame your right-click menu and<br>add <b>genuinely useful</b> actions.</div>
+
+  <!-- features -->
+  <div class="abs row" style="top:286px"><img src="icons/file-to-folder.png" alt=""><span class="div"></span>
+    <div><h3 style="color:var(--blue)">File to Folder</h3><p>Move each file into its own<br>folder named after the file.</p></div></div>
+  <div class="abs row note" style="top:400px"><img src="icons/file-notes.png" alt=""><span class="div"></span>
+    <div><h3 style="color:var(--amber)">File Note</h3><p>Create a dated note next to<br>a file and open it instantly.</p></div></div>
+  <div class="abs row copy" style="top:514px"><img src="icons/copy-file-names.png" alt=""><span class="div"></span>
+    <div><h3 style="color:var(--green)">Copy File &amp; Folder Names</h3><p>Names or full paths of files and<br>folders, any number at once.</p></div></div>
+  <div class="abs row" style="top:628px"><img src="icons/folder-purple.png" alt=""><span class="div"></span>
+    <div><h3 style="color:var(--purple)">Folder Color</h3><p>Color your folders so the<br>important ones stand out.</p></div></div>
+
+  <!-- connectors: row text -> chip -->
+  <div class="abs dash" style="left:470px;top:333px;width:26px"></div><div class="abs dot" style="left:497px;top:330px"></div>
+  <div class="abs dash" style="left:470px;top:447px;width:26px"></div><div class="abs dot" style="left:497px;top:444px"></div>
+  <div class="abs dash" style="left:470px;top:561px;width:26px"></div><div class="abs dot" style="left:497px;top:558px"></div>
+  <div class="abs dash" style="left:470px;top:675px;width:26px"></div><div class="abs dot" style="left:497px;top:672px"></div>
+
+  <!-- chips: the real menu labels and icons -->
+  <div class="abs chip" style="top:308px"><img src="icons/file-to-folder.png" alt="">File to Folder</div>
+  <div class="abs chip" style="top:422px"><img src="icons/file-notes.png" alt="">File Note</div>
+  <div class="abs chip" style="top:536px"><img src="icons/copy-file-names.png" alt="">Copy File &amp; Folder Names<span class="chev"></span></div>
+  <div class="abs chip" style="top:650px"><img src="icons/folder-blue.png" alt="">Folder Color<span class="chev"></span></div>
+
+  <!-- chip -> submenu connectors -->
+  <div class="abs dash" style="left:812px;top:561px;width:18px"></div><div class="abs dot" style="left:828px;top:558px"></div>
+  <div class="abs dash" style="left:714px;top:675px;width:116px"></div><div class="abs dot" style="left:828px;top:672px"></div>
+
+  <!-- submenus -->
+  <div class="abs menu" style="left:840px;top:490px">
+    <div>Copy name</div><div>Copy name without extension</div><div>Copy full path</div><div>Copy full path (quoted)</div>
+  </div>
+  <div class="abs menu grid" style="left:840px;top:612px">
+    <div><img src="icons/folder-red.png" alt="">Red</div><div><img src="icons/folder-orange.png" alt="">Orange</div>
+    <div><img src="icons/folder-green.png" alt="">Green</div><div><img src="icons/folder-mint.png" alt="">Mint</div>
+    <div><img src="icons/folder-teal.png" alt="">Teal</div><div><img src="icons/folder-aqua.png" alt="">Aqua</div>
+    <div><img src="icons/folder-blue.png" alt="">Blue</div><div><img src="icons/folder-sky.png" alt="">Sky</div>
+    <div><img src="icons/folder-purple.png" alt="">Purple</div><div><img src="icons/folder-lavender.png" alt="">Lavender</div>
+    <div><img src="icons/folder-pink.png" alt="">Pink</div><div><img src="icons/AppIcon.png" alt="">Reset color</div>
+  </div>
+
+  <!-- the real 1.0.7 window -->
+  <div class="abs win"><img src="window.png" alt=""></div>
+
+  <!-- badges -->
+  <div class="abs bar">
+    <span><svg viewBox="0 0 24 24" fill="#1a6ef5"><rect x="2" y="2" width="9.5" height="9.5"/><rect x="12.5" y="2" width="9.5" height="9.5"/><rect x="2" y="12.5" width="9.5" height="9.5"/><rect x="12.5" y="12.5" width="9.5" height="9.5"/></svg>Windows 10 &amp; 11</span>
+    <span class="sep"></span>
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="#1a6ef5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 3.8a6 6 0 0 0-8.5 0L5 10.5V19h8.5l6.7-6.7a6 6 0 0 0 0-8.5z"/><path d="M16 8 2 22"/><path d="M17.5 15H9"/></svg>Lightweight</span>
+    <span class="sep"></span>
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="#1a6ef5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7-5 5 5 5"/><path d="m16 7 5 5-5 5"/><path d="m14 4-4 16"/></svg>Native WinUI 3</span>
+    <span class="sep"></span>
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="#1a6ef5" stroke-width="2" stroke-linejoin="round"><rect x="7" y="9" width="10" height="13" rx="2"/><path d="M9 9V3h6v6"/><path d="M11 5.5h0M13 5.5h0" stroke-linecap="round" stroke-width="2.4"/></svg>Portable</span>
+    <span class="sep"></span>
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="#1a6ef5" stroke-width="2" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 8 3.4 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.6 0 5.6 3.5 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>Free &amp; Open Source</span>
+  </div>
+</body></html>
