@@ -15,7 +15,7 @@ A lightweight, portable Windows utility that adds four genuinely useful actions 
 
 Windows' right-click menu is usually two things at once: cluttered with entries you never use, and missing the one small tool you actually need. RightClick+ takes the opposite approach: a handful of focused, everyday file actions you can turn on individually, and that stay completely out of your way otherwise.
 
-- **Portable, no admin.** Every menu entry is written under your own user account (`HKCU`). Nothing touches the system, no UAC prompt.
+- **Portable, no admin.** Every menu entry is written under your own user account (`HKCU`), with no UAC prompt. The one exception is a PC with UAC turned off: there the click handler also needs a machine-wide registry entry, which the uninstaller removes.
 - **Clean by design.** Turning a feature off (or uninstalling the app) removes its menu entry completely.
 - **No lag.** Clicks run a tiny helper executable, so there's no app to launch on every right-click.
 
@@ -39,17 +39,17 @@ The note is saved right next to the file (`.txt` or `.md`, your choice), so the 
 
 <img width="1015" height="599" alt="Built-in File Note editor" src="https://github.com/user-attachments/assets/c73929da-9905-4209-82a8-501f62051a2c" />
 
-### 📋 Copy File Names
-**The problem.** You need a file's name or full path to paste into a script, a terminal, an email, or a config, sometimes with the extension, sometimes without, sometimes quoted because it has spaces. Windows makes you rename-to-copy or retype it.
+### 📋 Copy File & Folder Names
+**The problem.** You need a file's or folder's name or full path to paste into a script, a terminal, an email, or a config, sometimes with the extension, sometimes without, sometimes quoted because it has spaces. Windows makes you rename-to-copy or retype it.
 
-**The fix.** Right-click, **Copy File Names**, then pick exactly the form you need:
+**The fix.** Right-click any files or folders, **Copy File & Folder Names**, then pick exactly the form you need:
 
-- **Copy file name** → `report.pdf`
+- **Copy name** → `report.pdf`
 - **Copy name without extension** → `report`
 - **Copy full path** → `C:\Work\report.pdf`
 - **Copy full path (quoted)** → `"C:\Work\report.pdf"`
 
-Select several files and they are copied together, one per line or comma-separated, whichever you set.
+Select as many files and folders as you like (even mixed together) and they are copied in one go, one per line or comma-separated, whichever you set.
 
 ### 🎨 Folder Color
 **The problem.** Every folder is the same yellow. The three folders that actually matter are lost among the fifty that don't.

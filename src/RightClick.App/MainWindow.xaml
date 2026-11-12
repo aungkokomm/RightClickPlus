@@ -100,8 +100,8 @@
                     <ToggleSwitch IsOn="{x:Bind Actions.FileNotesEnabled, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
-                <controls:SettingsCard Header="Copy File Names"
-                                       Description="Adds a Copy submenu: name, name without extension, full path, quoted path.">
+                <controls:SettingsCard Header="Copy File &amp; Folder Names"
+                                       Description="Adds a Copy submenu for files and folders: name, name without extension, full path, quoted path.">
                     <controls:SettingsCard.HeaderIcon>
                         <ImageIcon Source="ms-appx:///Assets/copy-file-names.ico" />
                     </controls:SettingsCard.HeaderIcon>

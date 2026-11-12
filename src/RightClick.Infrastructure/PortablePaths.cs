@@ -3,8 +3,8 @@ namespace RightClick.Infrastructure;
 /// <summary>
 /// Resolves where the app stores its data. Portable by design: if a writable
 /// <c>Data</c> folder can live next to the executable (or a <c>portable.flag</c>
-/// marker is present), state is kept there; otherwise it falls back to
-/// <c>%LOCALAPPDATA%\RightClickPlus</c> for installed (Program Files) deployments.
+/// marker is present), state is kept there; otherwise, and always for installs under
+/// Program Files, it uses <c>%LOCALAPPDATA%\RightClickPlus</c>.
 /// </summary>
 public static class PortablePaths
 {
@@ -27,16 +27,45 @@ public static class PortablePaths
         var portableMarker = Path.Combine(exeDir, "portable.flag");
         var localData = Path.Combine(exeDir, "Data");
 
-        // Explicit portable mode, or a location we can actually write to.
-        if (File.Exists(portableMarker) || IsWritable(exeDir))
+        // Explicit portable mode, or a portable copy in a folder we can write to. An install under
+        // Program Files is never treated as portable: it is only writable when running as administrator,
+        // so picking the folder by writability would split the settings between elevated and normal runs.
+        if (File.Exists(portableMarker) || (!IsUnderProgramFiles(exeDir) && IsWritable(exeDir)))
         {
             return EnsureDir(localData);
         }
 
-        var roaming = Path.Combine(
+        var userData = EnsureDir(Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            AppFolderName);
-        return EnsureDir(roaming);
+            AppFolderName));
+        AdoptNewerSettings(Path.Combine(localData, "settings.json"), Path.Combine(userData, "settings.json"));
+        return userData;
+    }
+
+    private static bool IsUnderProgramFiles(string dir) =>
+        new[] { Environment.SpecialFolder.ProgramFiles, Environment.SpecialFolder.ProgramFilesX86 }
+            .Select(Environment.GetFolderPath)
+            .Where(p => !string.IsNullOrEmpty(p))
+            .Any(p => dir.StartsWith(p.TrimEnd('\\') + "\\", StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>
+    /// Versions up to 1.0.6 kept settings next to the exe when run as administrator. Copy that file
+    /// over when it is newer, so no choices are lost. The old file itself is left untouched.
+    /// </summary>
+    private static void AdoptNewerSettings(string oldFile, string newFile)
+    {
+        try
+        {
+            if (File.Exists(oldFile) &&
+                (!File.Exists(newFile) || File.GetLastWriteTimeUtc(oldFile) > File.GetLastWriteTimeUtc(newFile)))
+            {
+                File.Copy(oldFile, newFile, overwrite: true); // keeps the old timestamp, so this runs once
+            }
+        }
+        catch
+        {
+            // Best effort: the current settings file (or defaults) is used if the copy fails.
+        }
     }
 
     private static bool IsWritable(string dir)

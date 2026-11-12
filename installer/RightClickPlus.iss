@@ -51,11 +51,15 @@ Name: "{group}\Uninstall {#AppName}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#ExeName}"; Tasks: desktopicon
 
 [Run]
+; Bring the right-click entries up to date for this version straight away; otherwise an upgrade keeps
+; the previous version's entries until the app is next opened. Runs as the user who started Setup, so
+; it updates that user's entries.
+Filename: "{app}\RightClick.Cli.exe"; Parameters: "refresh-verbs"; Flags: runhidden runasoriginaluser
 Filename: "{app}\{#ExeName}"; Description: "Launch {#AppName} now"; Flags: nowait postinstall skipifsilent
 
 [UninstallRun]
-; Remove the per-user shell verbs (HKCU) BEFORE the files are deleted, so no orphaned, broken
-; right-click entries remain pointing at the removed CLI. Runs while RightClick.Cli.exe still exists.
+; Remove the shell verbs and the click handler registration BEFORE the files are deleted, so no orphaned,
+; broken right-click entries remain pointing at the removed CLI. Runs while RightClick.Cli.exe still exists.
 Filename: "{app}\RightClick.Cli.exe"; Parameters: "unregister-all"; Flags: runhidden; RunOnceId: "RemoveShellVerbs"
 
 [UninstallDelete]

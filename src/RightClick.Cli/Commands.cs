@@ -39,9 +39,9 @@ internal static class Commands
     }
 
     /// <summary>
-    /// Removes every RightClick+ shell verb from HKCU. Called by the uninstaller so no orphaned
-    /// (broken) context-menu entries are left pointing at the deleted CLI. Uninstall uses
-    /// DeleteSubKeyTree(throwOnMissingSubKey: false), so this is safe when a verb isn't installed.
+    /// Removes every RightClick+ shell verb and the click handler registration. Called by the
+    /// uninstaller so no orphaned (broken) context-menu entries are left pointing at the deleted CLI.
+    /// Uninstall uses DeleteSubKeyTree(throwOnMissingSubKey: false), so this is safe when a verb isn't installed.
     /// </summary>
     public static void UnregisterAll()
     {
@@ -52,10 +52,67 @@ internal static class Commands
             {
                 svc.Uninstall(action);
             }
+            svc.RemoveClickHandler();
         }
         catch (Exception ex)
         {
             CliLog.Error("UnregisterAll failed", ex);
+        }
+    }
+
+    /// <summary>
+    /// Brings the right-click entries in line with the saved settings. Run by the installer, so an
+    /// upgrade takes effect straight away instead of when the app is next opened.
+    /// </summary>
+    public static void RefreshVerbs()
+    {
+        try
+        {
+            var svc = new ShellVerbService(NullLogger<ShellVerbService>.Instance);
+            ShellVerbReconciler.Reconcile(svc, LoadSettings(), (message, ex) => CliLog.Error(message, ex));
+        }
+        catch (Exception ex)
+        {
+            CliLog.Error("RefreshVerbs failed", ex);
+        }
+    }
+
+    /// <summary>
+    /// Runs a right-click action on the selected items. <paramref name="command"/> is the action plus its
+    /// option, as stored on the menu entry: "file-to-folder", "file-note", "copy name", "folder-color red".
+    /// </summary>
+    public static void Run(string command, IReadOnlyList<string> paths)
+    {
+        var parts = command.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (parts.Length == 0 || paths.Count == 0)
+        {
+            return;
+        }
+
+        var option = parts.Length > 1 ? parts[1].ToLowerInvariant() : string.Empty;
+        switch (parts[0].ToLowerInvariant())
+        {
+            case "file-to-folder":
+                foreach (var path in paths)
+                {
+                    FileToFolder(path);
+                }
+                break;
+            case "file-note":
+                FileNote(paths);
+                break;
+            case "copy":
+                Copy(option, paths);
+                break;
+            case "folder-color":
+                foreach (var path in paths)
+                {
+                    FolderColor(option, path);
+                }
+                break;
+            default:
+                CliLog.Error($"Unknown command '{command}'.");
+                break;
         }
     }
 
@@ -297,7 +354,8 @@ internal static class Commands
     private static string Format(string variant, string path) => variant switch
     {
         "name" => Path.GetFileName(path),
-        "name-noext" => Path.GetFileNameWithoutExtension(path),
+        // A folder has no extension: "v1.2" must stay "v1.2", not become "v1".
+        "name-noext" => Directory.Exists(path) ? Path.GetFileName(path) : Path.GetFileNameWithoutExtension(path),
         "path" => path,
         "path-quoted" => $"\"{path}\"",
         _ => path,

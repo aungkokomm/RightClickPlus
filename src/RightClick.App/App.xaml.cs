@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
@@ -53,65 +52,25 @@ public partial class App : Application
     }
 
     /// <summary>
-    /// Reconciles the registered right-click verbs to the SAVED settings on every launch: each feature
-    /// that is enabled in settings is (re-)registered fresh (so it's always present and matches this
-    /// build's menu/icons/paths), and each disabled feature is removed. This is the source of truth —
-    /// previously we only refreshed verbs already in the registry, which meant that if a verb went
-    /// missing (e.g. after a reinstall, which wipes the entries) the app could never restore it even
-    /// though the toggle still showed On, leaving a "Folder color" menu that wasn't actually there.
+    /// Reconciles the registered right-click verbs to the saved settings on every launch (see
+    /// <see cref="ShellVerbReconciler"/>). Failures are written to Data\logs\app.log.
     /// </summary>
     private static void RefreshShellVerbs()
     {
+        var logger = Services.GetRequiredService<ILogger<App>>();
         try
         {
-            var shell = Services.GetRequiredService<IShellVerbService>();
-            var settings = Services.GetRequiredService<ISettingsService>().Current;
-            foreach (RightClick.Core.Models.ShellAction action in Enum.GetValues<RightClick.Core.Models.ShellAction>())
-            {
-                try
-                {
-                    if (IsEnabledInSettings(settings, action))
-                    {
-                        // Clean re-write: remove any stale/old registration, then register fresh.
-                        shell.Uninstall(action);
-                        shell.Install(action);
-                    }
-                    else if (shell.IsInstalled(action))
-                    {
-                        shell.Uninstall(action);
-                    }
-                }
-                catch
-                {
-                    // One feature's registry hiccup shouldn't stop the others.
-                }
-            }
-
-            // Tell the shell associations changed and flush the icon cache, so updated menu
-            // icons (e.g. new folder-colour art) replace any version Explorer cached by path.
-            SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST | SHCNF_FLUSH, IntPtr.Zero, IntPtr.Zero);
+            ShellVerbReconciler.Reconcile(
+                Services.GetRequiredService<IShellVerbService>(),
+                Services.GetRequiredService<ISettingsService>().Current,
+                (message, ex) => logger.LogError(ex, "{Message}", message));
         }
-        catch
+        catch (Exception ex)
         {
             // A registry hiccup shouldn't stop the app from opening.
+            logger.LogError(ex, "Refreshing the right-click entries failed.");
         }
     }
-
-    private static bool IsEnabledInSettings(RightClick.Core.Models.AppSettings s, RightClick.Core.Models.ShellAction action) => action switch
-    {
-        RightClick.Core.Models.ShellAction.FileToFolder => s.FileToFolderEnabled,
-        RightClick.Core.Models.ShellAction.FileNotes => s.FileNotesEnabled,
-        RightClick.Core.Models.ShellAction.CopyFileNames => s.CopyFileNamesEnabled,
-        RightClick.Core.Models.ShellAction.FolderColor => s.FolderColorEnabled,
-        _ => false,
-    };
-
-    [DllImport("shell32.dll")]
-    private static extern void SHChangeNotify(int wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
-
-    private const int SHCNE_ASSOCCHANGED = 0x08000000;
-    private const uint SHCNF_IDLIST = 0x0000;
-    private const uint SHCNF_FLUSH = 0x1000;
 
     private static IServiceProvider ConfigureServices()
     {
@@ -121,6 +80,7 @@ public partial class App : Application
         {
             builder.SetMinimumLevel(LogLevel.Information);
             builder.AddDebug();
+            builder.AddProvider(new FileLoggerProvider());
         });
 
         // Services
