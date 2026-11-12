@@ -40,8 +40,8 @@ public sealed partial class MainWindow : Window
         AppWindow.ResizeScaled(ContentWidth, 640); // initial; height refined to the content just below
 
         // Width is fixed, so the content's height is stable and fitting it can't cause a resize loop.
-        // Re-fits when the InfoBar opens/closes. TitleBar row is 48; +2 avoids a hairline scrollbar.
-        ContentPanel.SizeChanged += (_, e) => AppWindow.FitToContent(ContentWidth, 48 + e.NewSize.Height + 2);
+        // Re-fits when the InfoBar opens/closes. The client area is the 48 px TitleBar row plus the content.
+        ContentPanel.SizeChanged += (_, e) => AppWindow.FitToContent(ContentWidth, 48 + e.NewSize.Height);
 
         ApplyTheme();
     }
